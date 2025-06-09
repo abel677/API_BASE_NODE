@@ -4,26 +4,28 @@ import { User } from '../../../domain/entities/user.entity';
 import { UserMapper } from '../../mappers/user.mapper';
 
 interface UserDb {
-  id: string;
+  id?: string;
   email: string;
   password: string;
-  createdAt: Date;
+  createdAt?: Date;
   updatedAt: Date;
 }
 
 @injectable()
 export class InMemoryUserRepository implements UserRepository {
-  constructor() {}
-
   private _users: UserDb[] = [];
 
+  async delete(id: string): Promise<void> {
+    const update = this._users.filter((user) => user.id !== id);
+    this._users = update;
+  }
+
   async save(user: User): Promise<void> {
-    const mapUser = UserMapper.mapToPersistence(user);
-    const index = this._users.findIndex((u) => u.id === mapUser.id);
+    const index = this._users.findIndex((u) => u.id === user.id);
     if (index === -1) {
-      this._users.unshift(mapUser);
+      this._users.unshift(UserMapper.toPrismaCreate(user));
     } else {
-      this._users[index] = mapUser;
+      this._users[index] = UserMapper.toPrismaUpdate(user);
     }
   }
 
