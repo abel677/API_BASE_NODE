@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { UserRepository } from '../../domain/ports/user-repository';
 import { DeleteManyUserDto } from '../dtos/delete-all-user.dto';
-import { ApiError } from '../../../../utils/http-error';
+import { Application } from '../../../../utils/http-error';
 
 @injectable()
 export class DeleteManyUserUseCase {
@@ -17,7 +17,7 @@ export class DeleteManyUserUseCase {
     const notFoundIds = requestedIds.filter((id) => !foundIds.includes(id));
 
     if (notFoundIds.length > 0) {
-      throw ApiError.badRequest(
+      throw Application.badRequest(
         `Los siguientes usuarios no disponibles: ${notFoundIds.join(', ')}`,
       );
     }

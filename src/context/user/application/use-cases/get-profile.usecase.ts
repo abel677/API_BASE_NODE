@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { UserRepository } from '../../domain/ports/user-repository';
-import { ApiError } from '../../../../utils/http-error';
+import { Application } from '../../../../utils/http-error';
 
 @injectable()
 export class GetProfileUseCase {
@@ -10,7 +10,7 @@ export class GetProfileUseCase {
 
   async execute(id: string) {
     const user = await this.userRepo.getById(id);
-    if (!user) throw ApiError.unauthorized();
+    if (!user) throw Application.unauthorized();
     return user;
   }
 }

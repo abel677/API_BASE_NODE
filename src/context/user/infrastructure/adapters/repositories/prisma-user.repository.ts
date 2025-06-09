@@ -62,6 +62,19 @@ export class PrismaUserRepository implements UserRepository {
     });
   }
 
+  async getByVerificationToken(
+    verificationToken: string,
+  ): Promise<User | null> {
+    const user = await this.prisma.user.findFirst({
+      where: { verificationToken },
+      include: {
+        roles: true,
+      },
+    });
+    if (!user) return null;
+    return User.mapToModel(user);
+  }
+
   async getById(id: string): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
       where: { id },
@@ -88,7 +101,7 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async getByName(name: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where: { name },
       include: {
         roles: true,

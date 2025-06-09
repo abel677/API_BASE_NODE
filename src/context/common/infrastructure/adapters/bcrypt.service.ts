@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { HashService } from '../../domain/ports/hash.service';
+import { HashService } from '../../domain/ports/hash-service.port';
 
 export class BcryptHashService implements HashService {
   private readonly saltRounds = 10;

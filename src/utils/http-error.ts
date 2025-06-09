@@ -1,42 +1,41 @@
 export class HttpError extends Error {
-    constructor(
-        public message: string,
-        public status: number = 400,
-        public errors?: any
-    ) {
-        super(message);
-    }
+  constructor(
+    public message: string,
+    public status: number = 400,
+    public errors?: any,
+  ) {
+    super(message);
+  }
 }
 
-export class ApiError extends Error {
-    public status: number;
-    public errors?: any;
+export class Application extends Error {
+  public status: number;
+  public errors?: any;
 
-    private constructor(message: string, status: number, errors?: any) {
-        super(message);
-        this.status = status;
-        this.errors = errors;
-        Object.setPrototypeOf(this, ApiError.prototype);
-    }
+  private constructor(message: string, status: number, errors?: any) {
+    super(message);
+    this.status = status;
+    this.errors = errors;
+    Object.setPrototypeOf(this, Application.prototype);
+  }
 
-    static badRequest(message: string = "Bad Request", errors?: any) {
-        return new ApiError(message, 400, errors);
-    }
+  static badRequest(message: string = 'Bad Request', errors?: any) {
+    return new Application(message, 400, errors);
+  }
 
-    static unauthorized(message: string = "Unauthorized") {
-        return new ApiError(message, 401);
-    }
+  static unauthorized(message: string = 'Unauthorized') {
+    return new Application(message, 401);
+  }
 
-    static forbidden(message: string = "Forbidden") {
-        return new ApiError(message, 403);
-    }
+  static forbidden(message: string = 'Forbidden') {
+    return new Application(message, 403);
+  }
 
-    static notFound(message: string = "Not Found") {
-        return new ApiError(message, 404);
-    }
+  static notFound(message: string = 'Not Found') {
+    return new Application(message, 404);
+  }
 
-    static internal(message: string = "Internal Server Error") {
-        return new ApiError(message, 500);
-    }
+  static internal(message: string = 'Internal Server Error') {
+    return new Application(message, 500);
+  }
 }
-  

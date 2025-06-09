@@ -6,6 +6,7 @@ export interface UserRepository {
   delete(id: string): Promise<void>;
   deleteAll(ids: { id: string }[]): Promise<void>;
   save(user: User): Promise<void>;
+  getByVerificationToken(verificationToken: string): Promise<User | null>;
   getById(id: string): Promise<User | null>;
   getByEmail(email: string): Promise<User | null>;
   getByName(name: string): Promise<User | null>;

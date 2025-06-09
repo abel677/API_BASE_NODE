@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
-import { ApiError } from '../utils/http-error';
+import { Application } from '../utils/http-error';
 import { TokenService } from '../context/auth/domain/ports/token.service';
 
 export async function authMiddleware(
@@ -11,7 +11,7 @@ export async function authMiddleware(
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer '))
-      throw ApiError.unauthorized('Token no proporcionado');
+      throw Application.unauthorized('Token no proporcionado');
 
     const token = authHeader.split(' ')[1];
 
@@ -22,6 +22,6 @@ export async function authMiddleware(
 
     next();
   } catch (error) {
-    next(ApiError.unauthorized('Token inválido o expirado'));
+    next(Application.unauthorized('Token inválido o expirado'));
   }
 }

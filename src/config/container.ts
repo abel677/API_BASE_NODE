@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 import { UserRepository } from '../context/user/domain/ports/user-repository';
 import { AllUserUseCase } from '../context/user/application/use-cases/all-user.usecase';
-import { HashService } from '../context/common/domain/ports/hash.service';
+import { HashService } from '../context/common/domain/ports/hash-service.port';
 import { BcryptHashService } from '../context/common/infrastructure/adapters/bcrypt.service';
 
 import { PrismaClient } from '@prisma/client';
@@ -15,6 +15,9 @@ import { TokenService } from '../context/auth/domain/ports/token.service';
 import { JwtTokenService } from '../context/auth/infrastructure/adapters/jsonwebtoken.service';
 import { SignInUseCase } from '../context/auth/application/use-cases/sign-in.usecase';
 import { GetProfileUseCase } from '../context/user/application/use-cases/get-profile.usecase';
+import { MailService } from '../context/common/domain/ports/mail-service.port';
+import { MailtrapService } from '../context/common/infrastructure/adapters/mailtrap.service';
+import { SignInProviderUseCase } from '../context/auth/application/use-cases/sign-in-provider.usecase';
 
 export function configureContainer(prismaClient: PrismaClient) {
   container.registerInstance('PrismaClient', prismaClient);
@@ -22,6 +25,7 @@ export function configureContainer(prismaClient: PrismaClient) {
   // Servicios
   container.registerSingleton<HashService>('HashService', BcryptHashService);
   container.registerSingleton<TokenService>('TokenService', JwtTokenService);
+  container.registerSingleton<MailService>('MailService', MailtrapService);
 
   // Repositorios
   container.registerSingleton<UserRepository>(
@@ -48,5 +52,9 @@ export function configureContainer(prismaClient: PrismaClient) {
   container.registerSingleton<GetProfileUseCase>(
     'GetProfileUseCase',
     GetProfileUseCase,
+  );
+  container.registerSingleton<SignInProviderUseCase>(
+    'SignInProviderUseCase',
+    SignInProviderUseCase,
   );
 }

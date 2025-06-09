@@ -1,17 +1,20 @@
-import { ApiError } from '../../../../utils/http-error';
+import { Application } from '../../../../utils/http-error';
 import { Rol } from '../../../rol/domain/entities/rol.entity';
 
 interface UserProps {
   id: string;
   name: string;
   email: string;
-  password: string;
+  password?: string;
+  provider: string;
+  verificationToken?: string;
+  active: boolean;
   roles: Rol[];
   createdAt: Date;
   updatedAt: Date;
 }
 interface UserCreate
-  extends Omit<UserProps, 'id' | 'createdAt' | 'updatedAt'> {}
+  extends Omit<UserProps, 'id' | 'active' | 'createdAt' | 'updatedAt'> {}
 
 export class User {
   private constructor(private props: UserProps) {}
@@ -19,17 +22,27 @@ export class User {
   updateRoles(roles: Rol[]) {
     this.props.roles = roles;
   }
-  updateName(name: string) {
-    this.props.name = name;
-    this.props.updatedAt = new Date();
-  }
+
   updatePassword(password: string) {
     this.props.password = password;
-    this.props.updatedAt = new Date();
+    this.markAsUpdated();
   }
+
   updateEmail(email: string) {
     this.props.email = email;
+    this.markAsUpdated();
+  }
+
+  updateName(name: string) {
+    this.props.name = name;
+    this.markAsUpdated();
+  }
+  private markAsUpdated() {
     this.props.updatedAt = new Date();
+  }
+  markAsVerified() {
+    this.props.verificationToken = '';
+    this.markAsUpdated();
   }
 
   static create(user: UserCreate) {
@@ -40,6 +53,9 @@ export class User {
       name: user.name,
       email: user.email,
       password: user.password,
+      provider: user.provider,
+      verificationToken: user.verificationToken,
+      active: true,
       roles: user.roles,
       createdAt: currentDate,
       updatedAt: currentDate,
@@ -58,6 +74,15 @@ export class User {
   get email() {
     return this.props.email;
   }
+  get provider() {
+    return this.props.provider;
+  }
+  get active() {
+    return this.props.active;
+  }
+  get verificationToken() {
+    return this.props.verificationToken;
+  }
 
   get roles() {
     return this.props.roles;
@@ -70,26 +95,14 @@ export class User {
   }
 
   static mapToModel(user: { [key: string]: any }) {
-    if (!user.id) {
-      throw ApiError.badRequest('Missing ID');
-    }
-    if (!user.email) {
-      throw ApiError.badRequest('Missing email');
-    }
-    if (!user.password) {
-      throw ApiError.badRequest('Missing password');
-    }
-    if (!user.createdAt) {
-      throw ApiError.badRequest('Missing createdAt');
-    }
-    if (!user.updatedAt) {
-      throw ApiError.badRequest('Missing updatedAt');
-    }
     return new User({
       id: user.id,
       name: user.name,
       email: user.email,
-      password: user.password,
+      password: user?.password,
+      provider: user?.provider,
+      active: user.active,
+      verificationToken: user?.verificationToken,
       roles: user.roles,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,

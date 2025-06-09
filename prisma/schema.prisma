@@ -8,13 +8,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  email     String   @unique
-  password  String
-  createdAt DateTime
-  updatedAt DateTime
-  roles     Rol[]
+  id                String   @id @default(uuid())
+  name              String
+  email             String   @unique
+  password          String?
+  provider          String? // 'google', 'local', 'github', etc.
+  verificationToken String?
+  active            Boolean  @default(true)
+  roles             Rol[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 model Rol {

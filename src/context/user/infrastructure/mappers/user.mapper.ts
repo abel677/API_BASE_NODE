@@ -9,6 +9,8 @@ export class UserMapper {
       id: user.id,
       name: user.name,
       email: user.email,
+      active: user.active,
+      provider: user.provider,
       roles: user.roles.map((rol) => RolMapper.responseHttp(rol)),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -22,13 +24,16 @@ export class UserMapper {
       name: user.name,
       email: user.email,
       password: user.password,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      provider: user.provider,
+      active: user.active,
+      verificationToken: user.verificationToken,
       roles: {
         connect: user.roles.map((role) => ({
           id: role.id,
         })),
       },
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 
@@ -37,13 +42,16 @@ export class UserMapper {
     return {
       name: user.name,
       email: user.email,
-      password: user.password,
-      updatedAt: user.updatedAt,
+      active: user.active,
+      provider: user.provider,
+      verificationToken: user.verificationToken,
       roles: {
         connect: user.roles.map((role) => ({
           id: role.id,
         })),
       },
+      password: user.password,
+      updatedAt: user.updatedAt,
     };
   }
 }

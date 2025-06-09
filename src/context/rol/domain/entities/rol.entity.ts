@@ -1,4 +1,4 @@
-import { ApiError } from '../../../../utils/http-error';
+import { Application } from '../../../../utils/http-error';
 
 interface RolProps {
   id: string;
@@ -42,16 +42,16 @@ export class Rol {
 
   static mapToModel(rol: { [key: string]: any }) {
     if (!rol.id) {
-      throw ApiError.badRequest('Missing rol id');
+      throw Application.badRequest('Missing rol id');
     }
     if (!rol.name) {
-      throw ApiError.badRequest('Missing rol name');
+      throw Application.badRequest('Missing rol name');
     }
     if (!rol.createdAt) {
-      throw ApiError.badRequest('Missing rol createdAt');
+      throw Application.badRequest('Missing rol createdAt');
     }
     if (!rol.updatedAt) {
-      throw ApiError.badRequest('Missing rol updatedAt');
+      throw Application.badRequest('Missing rol updatedAt');
     }
     return new Rol({
       id: rol.id,

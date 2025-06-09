@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { RolRepository } from '../../domain/ports/rol.repository';
 import { Regex } from '../../../../utils/regex';
-import { ApiError } from '../../../../utils/http-error';
+import { Application } from '../../../../utils/http-error';
 
 @injectable()
 export class ByIdsRolUseCase {
@@ -12,7 +12,7 @@ export class ByIdsRolUseCase {
   async execute(ids: { id: string }[]) {
     for (const [index, rol] of ids.entries()) {
       if (!Regex.isValidUUID(rol.id)) {
-        throw ApiError.badRequest(`rol[${index}]: ID rol inválido.`);
+        throw Application.badRequest(`rol[${index}]: ID rol inválido.`);
       }
     }
     const roles = await this.rolRepo.getByIds(ids);
