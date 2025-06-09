@@ -14,6 +14,7 @@ import { AllRolUseCase } from '../context/rol/application/use-cases/all-rol.usec
 import { TokenService } from '../context/auth/domain/ports/token.service';
 import { JwtTokenService } from '../context/auth/infrastructure/adapters/jsonwebtoken.service';
 import { SignInUseCase } from '../context/auth/application/use-cases/sign-in.usecase';
+import { GetProfileUseCase } from '../context/user/application/use-cases/get-profile.usecase';
 
 export function configureContainer(prismaClient: PrismaClient) {
   container.registerInstance('PrismaClient', prismaClient);
@@ -44,4 +45,8 @@ export function configureContainer(prismaClient: PrismaClient) {
   );
   container.registerSingleton<AllRolUseCase>('AllRolUseCase', AllRolUseCase);
   container.registerSingleton<SignInUseCase>('SignInUseCase', SignInUseCase);
+  container.registerSingleton<GetProfileUseCase>(
+    'GetProfileUseCase',
+    GetProfileUseCase,
+  );
 }

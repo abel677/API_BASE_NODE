@@ -28,6 +28,16 @@ export const refreshToken = async (req: Request, res: Response) => {
   }
 };
 
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: envConfig.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+
+  res.json({ message: 'Sesión cerrada' });
+};
+
 export const signIn = async (req: Request, res: Response) => {
   const [error, dto] = SignInDto.create(req.body);
   if (error) throw ApiError.badRequest(error);

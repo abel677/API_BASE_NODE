@@ -63,7 +63,7 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async getById(id: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where: { id },
       include: {
         roles: true,

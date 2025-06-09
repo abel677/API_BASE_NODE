@@ -9,6 +9,15 @@ import { UpdateUserDto } from '../application/dtos/update-user.dto';
 import { UpdateUserUseCase } from '../application/use-cases/update-user.usecase';
 import { DeleteManyUserUseCase } from '../application/use-cases/delete-many-user.usecase';
 import { DeleteManyUserDto } from '../application/dtos/delete-all-user.dto';
+import { GetProfileUseCase } from '../application/use-cases/get-profile.usecase';
+
+export const profile = async (req: Request, res: Response) => {
+  const id = (req as any).user.id;
+
+  const useCase = container.resolve(GetProfileUseCase);
+  const user = await useCase.execute(id);
+  res.json(UserMapper.responseHttp(user));
+};
 
 export const all = async (req: Request, res: Response) => {
   const useCase = container.resolve(AllUserUseCase);
