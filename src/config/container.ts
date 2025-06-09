@@ -11,12 +11,16 @@ import { RolRepository } from '../context/rol/domain/ports/rol.repository';
 import { ByIdsRolUseCase } from '../context/rol/application/use-cases/by-ids-rol.usecase';
 import { DeleteManyUserUseCase } from '../context/user/application/use-cases/delete-many-user.usecase';
 import { AllRolUseCase } from '../context/rol/application/use-cases/all-rol.usecase';
+import { TokenService } from '../context/auth/domain/ports/token.service';
+import { JwtTokenService } from '../context/auth/infrastructure/adapters/jsonwebtoken.service';
+import { SignInUseCase } from '../context/auth/application/use-cases/sign-in.usecase';
 
 export function configureContainer(prismaClient: PrismaClient) {
   container.registerInstance('PrismaClient', prismaClient);
 
   // Servicios
   container.registerSingleton<HashService>('HashService', BcryptHashService);
+  container.registerSingleton<TokenService>('TokenService', JwtTokenService);
 
   // Repositorios
   container.registerSingleton<UserRepository>(
@@ -39,4 +43,5 @@ export function configureContainer(prismaClient: PrismaClient) {
     DeleteManyUserUseCase,
   );
   container.registerSingleton<AllRolUseCase>('AllRolUseCase', AllRolUseCase);
+  container.registerSingleton<SignInUseCase>('SignInUseCase', SignInUseCase);
 }
