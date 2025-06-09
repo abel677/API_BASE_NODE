@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 
 import userRoutes from './context/user/presentation/routes';
+import rolRoutes from './context/rol/presentation/routes';
 import { errorHandler } from './shared/error.middleware';
 import { envConfig } from './config/envConfig';
 
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.use('/users', userRoutes);
+app.use('/roles', rolRoutes);
 app.use(errorHandler);
 
 app.set('port', envConfig.PORT);

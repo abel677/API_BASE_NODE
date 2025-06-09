@@ -1,3 +1,5 @@
+import { Prisma } from '@prisma/client';
+import { RolMapper } from '../../../rol/infrastructure/mappers/rol.mapper';
 import { User } from '../../domain/entities/user.entity';
 
 export class UserMapper {
@@ -7,13 +9,14 @@ export class UserMapper {
       id: user.id,
       name: user.name,
       email: user.email,
+      roles: user.roles.map((rol) => RolMapper.responseHttp(rol)),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
   }
 
   // Mapea para crear un usuario en DB (Prisma create)
-  static toPrismaCreate(user: User) {
+  static toPrismaCreate(user: User): Prisma.UserCreateInput {
     return {
       id: user.id,
       name: user.name,
@@ -21,6 +24,11 @@ export class UserMapper {
       password: user.password,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      roles: {
+        connect: user.roles.map((role) => ({
+          id: role.id,
+        })),
+      },
     };
   }
 
@@ -31,6 +39,11 @@ export class UserMapper {
       email: user.email,
       password: user.password,
       updatedAt: user.updatedAt,
+      roles: {
+        connect: user.roles.map((role) => ({
+          id: role.id,
+        })),
+      },
     };
   }
 }

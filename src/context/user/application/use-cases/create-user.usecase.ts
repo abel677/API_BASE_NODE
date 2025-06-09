@@ -3,14 +3,16 @@ import { UserRepository } from '../../domain/ports/user-repository';
 import { ApiError } from '../../../../utils/http-error';
 import { User } from '../../domain/entities/user.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
-import { UserMapper } from '../../infrastructure/mappers/user.mapper';
 import { HashService } from '../../../common/domain/ports/hash.service';
+import { ByIdsRolUseCase } from '../../../rol/application/use-cases/by-ids-rol.usecase';
 
 @injectable()
 export class CreateUserUseCase {
   constructor(
-    @inject('UserRepository') private userRepo: UserRepository,
+    @inject('UserRepository') private readonly userRepo: UserRepository,
     @inject('HashService') private readonly hashService: HashService,
+    @inject('ByIdsRolUseCase')
+    private readonly ByIdsRolUseCase: ByIdsRolUseCase,
   ) {}
 
   async execute(user: CreateUserDto) {
@@ -19,14 +21,30 @@ export class CreateUserUseCase {
       throw ApiError.badRequest('Usuario no disponible');
     }
 
+    // Obtener roles existentes
+    const roles = await this.ByIdsRolUseCase.execute(user.roles);
+
+    // Comparar roles enviados vs encontrados
+    const requestedIds = user.roles.map((r) => r.id);
+    const foundIds = roles.map((r) => r.id);
+    const notFoundIds = requestedIds.filter((id) => !foundIds.includes(id));
+
+    if (notFoundIds.length > 0) {
+      throw ApiError.badRequest(
+        `Los siguientes roles no existen: ${notFoundIds.join(', ')}`,
+      );
+    }
+
     const passwordHash = await this.hashService.hash(user.password);
+
     const newUser = User.create({
       name: user.name,
       email: user.email,
       password: passwordHash,
+      roles: roles,
     });
 
     await this.userRepo.save(newUser);
-    return UserMapper.responseHttp(newUser);
+    return newUser;
   }
 }

@@ -1,6 +1,5 @@
 import { inject, injectable } from 'tsyringe';
 import { UserRepository } from '../../domain/ports/user-repository';
-import { UserMapper } from '../../infrastructure/mappers/user.mapper';
 
 @injectable()
 export class AllUserUseCase {
@@ -8,6 +7,6 @@ export class AllUserUseCase {
 
   async execute() {
     const users = await this.userRepo.all();
-    return users.map((user) => UserMapper.responseHttp(user));
+    return users;
   }
 }

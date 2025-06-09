@@ -1,9 +1,10 @@
 {
-  "name": "myproject",
+  "name": "my_project",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --env-file .env --respawn src/main.ts"
+    "dev": "ts-node-dev --env-file .env --respawn src/main.ts",
+    "seed": "ts-node src/test/seed.ts"
   },
   "keywords": [],
   "author": "",

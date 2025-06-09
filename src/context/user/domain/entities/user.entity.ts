@@ -1,10 +1,12 @@
 import { ApiError } from '../../../../utils/http-error';
+import { Rol } from '../../../rol/domain/entities/rol.entity';
 
 interface UserProps {
   id: string;
   name: string;
   email: string;
   password: string;
+  roles: Rol[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,8 +16,19 @@ interface UserCreate
 export class User {
   private constructor(private props: UserProps) {}
 
-  updateEmail(password: string) {
-    this.props.email = password;
+  updateRoles(roles: Rol[]) {
+    this.props.roles = roles;
+  }
+  updateName(name: string) {
+    this.props.name = name;
+    this.props.updatedAt = new Date();
+  }
+  updatePassword(password: string) {
+    this.props.password = password;
+    this.props.updatedAt = new Date();
+  }
+  updateEmail(email: string) {
+    this.props.email = email;
     this.props.updatedAt = new Date();
   }
 
@@ -27,6 +40,7 @@ export class User {
       name: user.name,
       email: user.email,
       password: user.password,
+      roles: user.roles,
       createdAt: currentDate,
       updatedAt: currentDate,
     });
@@ -43,6 +57,10 @@ export class User {
   }
   get email() {
     return this.props.email;
+  }
+
+  get roles() {
+    return this.props.roles;
   }
   get createdAt() {
     return this.props.createdAt;
@@ -72,6 +90,7 @@ export class User {
       name: user.name,
       email: user.email,
       password: user.password,
+      roles: user.roles,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
