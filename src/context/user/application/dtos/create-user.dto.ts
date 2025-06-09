@@ -2,14 +2,19 @@ import { Regex } from '../../../../utils/regex';
 
 export class CreateUserDto {
   private constructor(
+    public readonly name: string,
     public readonly email: string,
     public readonly password: string,
   ) {}
 
   static create(body: { [key: string]: any }): [string?, CreateUserDto?] {
+    const name = body?.name;
     const email = body?.email;
     const password = body?.password;
 
+    if (!name) {
+      return ['name: Nombre requerido.'];
+    }
     if (!email) {
       return ['email: Correo electrónico requerido.'];
     }
@@ -23,6 +28,6 @@ export class CreateUserDto {
       ];
     }
 
-    return [undefined, new CreateUserDto(email, password)];
+    return [undefined, new CreateUserDto(name, email, password)];
   }
 }

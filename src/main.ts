@@ -1,25 +1,22 @@
+import 'reflect-metadata';
+import app from './app';
+import { envConfig } from './config/envConfig';
+import { Database } from './config/database';
+import { configureContainer } from './config/container';
 
-import "reflect-metadata";
-import "./config/container";
-import express from "express"
-import { envConfig } from "./config/envConfig";
-import morgan from "morgan"
+(async () => {
+  try {
+    await Database.connect();
+    console.log('✅ Base de datos conectada');
 
-import userRoutes from "./context/user/presentation/routes"
-import { errorHandler } from "./shared/error.middleware";
+    const prisma = Database.getClient();
+    configureContainer(prisma);
 
-const app = express()
-
-
-app.use(express.json());
-app.use(morgan("dev"))
-
-
-app.use("/users", userRoutes);
-app.use(errorHandler); 
-
-app.set("port", envConfig.PORT)
-
-app.listen(envConfig.PORT, () => {
-    console.log(`Server running on port -> ${envConfig.PORT}`);
-});
+    app.listen(envConfig.PORT, () => {
+      console.log(`🚀 API corriendo en puerto: ${envConfig.PORT}`);
+    });
+  } catch (err) {
+    console.error(`❌ Error al conectar con la DB: ${err}`);
+    process.exit(1);
+  }
+})();

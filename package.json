@@ -10,15 +10,19 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "^22.15.30",
     "prettier": "^3.5.3",
+    "prisma": "^6.9.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.2.2",
